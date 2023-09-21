@@ -1,0 +1,28 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": ".build/index.js",
+  "type": "module",
+  "scripts": {
+    "bot": "source .env && node ./.build/index.js",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^18.17.18",
+    "@xmtp/bot-kit-pro": "^0.2.7",
+    "@xmtp/content-type-remote-attachment": "^1.1.1",
+    "@xmtp/xmtp-js": "^11.0.0",
+    "ethers": "^6.6.4",
+    "node-fetch": "^3.3.2",
+    "qrcode-terminal": "^0.12.0",
+    "web3.storage": "^4.5.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
+}
