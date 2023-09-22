@@ -1,13 +1,16 @@
 {
-  "name": "nodejs",
+  "name": "ethnyc-preso",
   "version": "1.0.0",
   "description": "",
   "main": ".build/index.js",
   "type": "module",
   "scripts": {
-    "bot": "source .env && node ./.build/index.js",
+    "bot": "node ./.build/index.js",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "source": "source .env",
+    "dev": "npm run start-docker && npm run build && npm run source && npm run bot",
+    "start-docker": "docker-compose up -d",
     "start": "npm run build && npm run bot"
   },
   "keywords": [],

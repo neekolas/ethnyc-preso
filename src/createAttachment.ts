@@ -1,38 +1,32 @@
-import { Web3Storage, File } from "web3.storage";
-import config from "./config.js";
+import { Web3Storage, File } from "web3.storage"
+import config from "./config.js"
 import {
   Attachment,
   AttachmentCodec,
   RemoteAttachment,
   RemoteAttachmentCodec,
-} from "@xmtp/content-type-remote-attachment";
-import fetch from "node-fetch";
+} from "@xmtp/content-type-remote-attachment"
+import fetch from "node-fetch"
 
-const web3Storage = new Web3Storage({ token: config.web3StorageToken });
+const web3Storage = new Web3Storage({ token: config.web3StorageToken })
 
 export async function createAttachment(url: string, filename: string) {
-  const { fileData, mimeType } = await downloadFile(url);
+  const { fileData, mimeType } = await downloadFile(url)
   const attachment: Attachment = {
     filename,
     mimeType,
     data: fileData,
-  };
+  }
 
   const encryptedAttachment = await RemoteAttachmentCodec.encodeEncrypted(
     attachment,
-    new AttachmentCodec()
-  );
+    new AttachmentCodec(),
+  )
 
-  const upload = new File(
-    [encryptedAttachment.payload],
-    "XMTPEncryptedContent"
-  );
-  const cid = await web3Storage.put([upload]);
-  const downloadUrl = `https://${cid}.ipfs.w3s.link/XMTPEncryptedContent`;
+  const downloadUrl = await uploadFile(encryptedAttachment.payload)
 
   const remoteAttachment: RemoteAttachment = {
     // This is the URL string where clients can download the encrypted
-    // encoded content
     url: downloadUrl,
 
     // We hash the encrypted encoded payload and send that along with the
@@ -55,23 +49,26 @@ export async function createAttachment(url: string, filename: string) {
     // the remote attachment before it is downloaded and decrypted.
     filename: attachment.filename,
     contentLength: attachment.data.byteLength,
-  };
-  console.log(remoteAttachment);
-  return remoteAttachment;
+  }
+  return remoteAttachment
+}
+
+async function uploadFile(data: Uint8Array): Promise<string> {
+  const upload = new File([data], "XMTPEncryptedContent")
+  const cid = await web3Storage.put([upload])
+  return `https://${cid}.ipfs.w3s.link/XMTPEncryptedContent`
 }
 
 async function downloadFile(url: string) {
-  const response = await fetch(url);
-  const headers = response.headers;
-  const mimeType = headers.get("content-type");
+  const response = await fetch(url)
+  const headers = response.headers
+  const mimeType = headers.get("content-type")
   if (!mimeType) {
-    console.log(headers);
-    throw new Error("No mimetype from headers");
+    throw new Error("No mimetype from headers")
   }
-  const fileData = new Uint8Array(await response.buffer());
+  const fileData = new Uint8Array(await response.buffer())
   if (!fileData) {
-    throw new Error("Could not read file data");
+    throw new Error("Could not read file data")
   }
-  console.log("Downloaded file", mimeType, fileData);
-  return { mimeType, fileData };
+  return { mimeType, fileData }
 }
