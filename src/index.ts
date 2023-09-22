@@ -1,12 +1,12 @@
 import { newBotConfig, run } from "@xmtp/bot-kit-pro"
 import config from "./config.js"
-//@ts-ignore
-import qrcode from "qrcode-terminal"
+
 import {
   AttachmentCodec,
   RemoteAttachmentCodec,
 } from "@xmtp/content-type-remote-attachment"
 import gifSearch from "./gifSearch.js"
+import { printWalletQr } from "./utils.js"
 
 async function start() {
   const botConfig = newBotConfig(
@@ -28,7 +28,7 @@ async function start() {
 
   for (const bot of bots) {
     console.log(`Bot started: ${bot.config.name} - ${bot.address}`)
-    qrcode.generate(`https://converse.xyz/dm/${bot.address}`)
+    printWalletQr(bot.address)
   }
 }
 
