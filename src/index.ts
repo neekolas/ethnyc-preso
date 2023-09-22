@@ -8,24 +8,29 @@ import {
 import gifSearch from "./gifSearch.js"
 import { printWalletQr } from "./utils.js"
 
+// This code will get run every time a message comes in
+async function gmBotHandler(ctx: HandlerContext) {
+  ctx.reply("gm")
+}
+
 async function start() {
   const gmBot = newBotConfig(
     "gm",
     {
-      xmtpEnv: 'production'
+      xmtpEnv: "production",
     },
     gmBotHandler,
   )
-  const gifBot = newBotConfig(
-    "gif",
-    {
-      xmtpEnv: "production",
-      clientOptions: {
-        codecs: [new RemoteAttachmentCodec(), new AttachmentCodec()],
-      },
-    },
-    gifSearch,
-  )
+  // const gifBot = newBotConfig(
+  //   "gif",
+  //   {
+  //     xmtpEnv: "production",
+  //     clientOptions: {
+  //       codecs: [new RemoteAttachmentCodec(), new AttachmentCodec()],
+  //     },
+  //   },
+  //   gifSearch,
+  // )
 
   const { bots } = await run([gmBot], {
     db: {
@@ -40,7 +45,3 @@ async function start() {
 }
 
 start()
-
-async function gmBotHandler(ctx: HandlerContext) {
-  ctx.reply('gm')
-}
