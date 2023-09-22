@@ -1,4 +1,4 @@
-import { newBotConfig, run } from "@xmtp/bot-kit-pro"
+import { HandlerContext, newBotConfig, run } from "@xmtp/bot-kit-pro"
 import config from "./config.js"
 //@ts-ignore
 import qrcode from "qrcode-terminal"
@@ -9,7 +9,14 @@ import {
 import gifSearch from "./gifSearch.js"
 
 async function start() {
-  const botConfig = newBotConfig(
+  const gmBot = newBotConfig(
+    "gm",
+    {
+      xmtpEnv: 'production'
+    },
+    gmBotHandler,
+  )
+  const gifBot = newBotConfig(
     "gif",
     {
       xmtpEnv: "production",
@@ -20,7 +27,7 @@ async function start() {
     gifSearch,
   )
 
-  const { bots } = await run([botConfig], {
+  const { bots } = await run([gmBot], {
     db: {
       postgresConnectionString: config.databaseUrl,
     },
@@ -33,3 +40,7 @@ async function start() {
 }
 
 start()
+
+async function gmBotHandler(ctx: HandlerContext) {
+  ctx.reply('gm')
+}
