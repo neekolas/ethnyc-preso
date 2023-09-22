@@ -1,12 +1,12 @@
-import { newBotConfig, run } from "@xmtp/bot-kit-pro";
-import config from "./config.js";
+import { newBotConfig, run } from "@xmtp/bot-kit-pro"
+import config from "./config.js"
 //@ts-ignore
-import qrcode from "qrcode-terminal";
+import qrcode from "qrcode-terminal"
 import {
   AttachmentCodec,
   RemoteAttachmentCodec,
-} from "@xmtp/content-type-remote-attachment";
-import gifSearch from "./gifSearch.js";
+} from "@xmtp/content-type-remote-attachment"
+import gifSearch from "./gifSearch.js"
 
 async function start() {
   const botConfig = newBotConfig(
@@ -17,19 +17,19 @@ async function start() {
         codecs: [new RemoteAttachmentCodec(), new AttachmentCodec()],
       },
     },
-    gifSearch
-  );
+    gifSearch,
+  )
 
   const { bots } = await run([botConfig], {
     db: {
-      postgresConnectionString: `${config.databaseUrl}?sslmode=require`,
+      postgresConnectionString: config.databaseUrl,
     },
-  });
+  })
 
   for (const bot of bots) {
-    console.log(`Bot started: ${bot.config.name} - ${bot.address}`);
-    qrcode.generate(`https://go.cb-w.com/messaging?address=${bot.address}`);
+    console.log(`Bot started: ${bot.config.name} - ${bot.address}`)
+    qrcode.generate(`https://converse.xyz/dm/${bot.address}`)
   }
 }
 
-start();
+start()
